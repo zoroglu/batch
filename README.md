@@ -920,3 +920,62 @@ Hibernate: select b1_0.id,b1_0.apiinventorycode,b1_0.code,b1_0.companyid,b1_0.cr
 2025-04-09T02:11:16.358+03:00 ERROR 349805 --- [o-8088-exec-126] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.dao.IncorrectResultSizeDataAccessException: Query did not return a unique result: 2 results were returned] with root cause
 ```
 
+
+## Interesting Observation:
+Also, when I add this line to my application.properties file ```logging.level.org.springframework.aop=DEBUG``` and restart my project during the load test, aspect works but prints the following error in the log.
+
+```
+2025-04-09T18:02:32.121+03:00  INFO 771422 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-04-09T18:02:32.123+03:00  INFO 771422 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-04-09T18:02:32.463+03:00  WARN 771422 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-04-09T18:02:32.946+03:00  INFO 771422 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8088 (http) with context path '/'
+2025-04-09T18:02:32.954+03:00  INFO 771422 --- [           main] com.example.batch.BatchApplication       : Started BatchApplication in 4.729 seconds (process running for 5.357)
+2025-04-09T18:02:33.006+03:00  INFO 771422 --- [o-8088-exec-104] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-09T18:02:33.007+03:00  INFO 771422 --- [o-8088-exec-104] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-04-09T18:02:33.011+03:00  INFO 771422 --- [o-8088-exec-104] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-04-09T18:02:33.143+03:00 DEBUG 771422 --- [o-8088-exec-181] o.s.a.aspectj.AspectJExpressionPointcut  : PointcutExpression matching rejected target method
+
+java.lang.NullPointerException: Cannot invoke "org.aspectj.weaver.ResolvedMember.hasBackingGenericMember()" because "candidate" is null
+	at org.aspectj.weaver.ResolvedType.lookupResolvedMember(ResolvedType.java:645) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.JoinPointSignatureIterator.findSignaturesFromSupertypes(JoinPointSignatureIterator.java:192) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.JoinPointSignatureIterator.findSignaturesFromSupertypes(JoinPointSignatureIterator.java:229) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.JoinPointSignatureIterator.findSignaturesFromSupertypes(JoinPointSignatureIterator.java:238) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.JoinPointSignatureIterator.findSignaturesFromSupertypes(JoinPointSignatureIterator.java:229) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.JoinPointSignatureIterator.findSignaturesFromSupertypes(JoinPointSignatureIterator.java:229) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.JoinPointSignatureIterator.findSignaturesFromSupertypes(JoinPointSignatureIterator.java:229) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.JoinPointSignatureIterator.findSignaturesFromSupertypes(JoinPointSignatureIterator.java:229) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.JoinPointSignatureIterator.findSignaturesFromSupertypes(JoinPointSignatureIterator.java:229) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.JoinPointSignatureIterator.hasNext(JoinPointSignatureIterator.java:68) ~[aspectjweaver-1.9.22.1.jar:1.9.22.1]
+	at org.aspectj.weaver.patterns.SignaturePattern.matches(SignaturePattern.java:317) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.aspectj.weaver.patterns.KindedPointcut.matchInternal(KindedPointcut.java:202) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.aspectj.weaver.patterns.Pointcut.match(Pointcut.java:137) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.aspectj.weaver.patterns.KindedPointcut.findResidueInternal(KindedPointcut.java:454) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.aspectj.weaver.patterns.Pointcut.findResidue(Pointcut.java:260) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.aspectj.weaver.patterns.OrPointcut.findResidueInternal(OrPointcut.java:111) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.aspectj.weaver.patterns.Pointcut.findResidue(Pointcut.java:260) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.aspectj.weaver.internal.tools.PointcutExpressionImpl.getShadowMatch(PointcutExpressionImpl.java:323) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.aspectj.weaver.internal.tools.PointcutExpressionImpl.matchesExecution(PointcutExpressionImpl.java:129) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.aspectj.weaver.internal.tools.PointcutExpressionImpl.matchesMethodExecution(PointcutExpressionImpl.java:110) ~[aspectjweaver-1.9.22.1.jar:na]
+	at org.springframework.aop.aspectj.AspectJExpressionPointcut.getShadowMatch(AspectJExpressionPointcut.java:476) ~[spring-aop-6.2.0.jar:6.2.0]
+	at org.springframework.aop.aspectj.AspectJExpressionPointcut.getTargetShadowMatch(AspectJExpressionPointcut.java:466) ~[spring-aop-6.2.0.jar:6.2.0]
+	at org.springframework.aop.aspectj.AspectJExpressionPointcut.matches(AspectJExpressionPointcut.java:312) ~[spring-aop-6.2.0.jar:6.2.0]
+	at org.springframework.aop.framework.DefaultAdvisorChainFactory.getInterceptorsAndDynamicInterceptionAdvice(DefaultAdvisorChainFactory.java:79) ~[spring-aop-6.2.0.jar:6.2.0]
+	at org.springframework.aop.framework.AdvisedSupport.getInterceptorsAndDynamicInterceptionAdvice(AdvisedSupport.java:520) ~[spring-aop-6.2.0.jar:6.2.0]
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:207) ~[spring-aop-6.2.0.jar:6.2.0]
+	at jdk.proxy2/jdk.proxy2.$Proxy123.findByCode(Unknown Source) ~[na:na]
+	at com.example.batch.service.BatchBusinessService.findIdBatchByCode(BatchBusinessService.java:15) ~[classes/:na]
+	at com.example.batch.rest.BatchService.findIdBatchByCode(BatchService.java:21) ~[classes/:na]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[spring-web-6.2.0.jar:6.2.0]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[spring-web-6.2.0.jar:6.2.0]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.0.jar:6.2.0]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986) ~[spring-webmvc-6.2.0.jar:6.2.0]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891) ~[spring-webmvc-6.2.0.jar:6.2.0]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.0.jar:6.2.0]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088) ~[spring-webmvc-6.2.0.jar:6.2.0]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:978) ~[spring-webmvc-6.2.0.jar:6.2.0]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.0.jar:6.2.0]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.0.jar:6.2.0]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.33.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.0.jar:6.2.0]
