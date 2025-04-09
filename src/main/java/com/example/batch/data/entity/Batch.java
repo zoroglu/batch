@@ -21,8 +21,4 @@ public class Batch extends TenantEntity implements Serializable {
     @Column(name = "CODE")
     private String code;
 
-    @Column(name = "APIINVENTORYCODE")
-    private String apiInventoryCode;
-
-
 }
