@@ -23,7 +23,7 @@ from locust import HttpUser, task
 class BatchProject(HttpUser):    
     @task
     def authentication_microservice(self):
-        self.client.get("/batch/findIdBatchByCode?code=OUTDATEDPAYMENT", json={})
+        self.client.get("/batch/findIdBatchByCode?code=CURRENCYRATE", json={})
 ```
 
 
