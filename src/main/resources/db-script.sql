@@ -8,14 +8,12 @@ create table BATCHTEMP
     COMPANYID        NUMBER,
     constraint UK_BATCHTEMP_CODE_COMPANYID
         unique (CODE, COMPANYID)
-)
-    /
+);
 
 
 
 
-create sequence BATCHTEMP_S
-    /
+create sequence BATCHTEMP_S;
 
 
 INSERT INTO BATCHTEMP (ID, CODE, VERSIONID, COMPANYID)
@@ -25,4 +23,6 @@ INSERT INTO BATCHTEMP (ID, CODE, VERSIONID, COMPANYID)
 VALUES (2, 'CURRENCYRATE', 0, 2);
 
 
+
+commit;
 

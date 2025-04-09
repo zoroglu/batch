@@ -1,0 +1,17 @@
+version: '3.1'
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: oracle-db
+    ports:
+      - 1521:1521
+    environment:
+      ORACLE_PASSWORD: batch
+      APP_USER: batch
+      APP_USER_PASSWORD: batch
+      ORACLE_DATABASE: batchdb
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s batch/batch@localhost:1521/batchdb"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
