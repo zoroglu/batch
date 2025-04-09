@@ -20,6 +20,14 @@ public class Batch implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public Batch() {
+    }
+
+    public Batch(String code, Long companyId) {
+        this.code = code;
+        this.companyId = companyId;
+    }
+
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BatchTempSeq")
